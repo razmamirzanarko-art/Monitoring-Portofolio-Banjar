@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corporate Digital Dashboard - Monitoring Portofolio</title>
+  <title>Digital Banking Dashboard - Monitoring Portofolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <!-- Chart.js CDN -->
@@ -11,92 +11,104 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
     body { 
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-      background-color: #f8fafc;
-      color: #1e293b;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      background-color: #f1f5f9;
+      color: #0f172a;
     }
 
-    /* Corporate Light Card Design */
-    .corporate-card {
+    /* DIGITAL BANKING UI CARD STYLING */
+    .bank-card {
       background: #ffffff;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
+      border-radius: 20px;
     }
 
-    .corporate-card-interactive {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .corporate-card-interactive:hover {
-      border-color: #c7d2fe;
-      transform: translateY(-2px);
-      box-shadow: 0 12px 25px -5px rgba(79, 70, 229, 0.1);
+    .bank-hero-card {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      box-shadow: 0 15px 35px -10px rgba(30, 27, 75, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
     }
 
-    /* Subtle Pulse Glow Animation untuk Tema Terang */
-    @keyframes subtlePulseLight {
+    /* ANIMASI BERKEDIP & GLOW HARDCODED (FIXED) */
+    @keyframes digitalBlink {
       0%, 100% {
-        box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-        filter: brightness(1);
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.9));
       }
       50% {
-        box-shadow: 0 0 18px rgba(16, 185, 129, 0.7);
-        filter: brightness(1.05);
+        opacity: 0.35;
+        transform: scale(0.97);
+        filter: drop-shadow(0 0 2px rgba(52, 211, 153, 0.2));
       }
     }
 
-    @keyframes textGlowLight {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; transform: scale(1.02); }
+    @keyframes barGlowPulse {
+      0%, 100% {
+        background-position: 0% 50%;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+      }
+      50% {
+        background-position: 100% 50%;
+        box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+      }
     }
 
-    .glow-bar-corporate {
-      animation: subtlePulseLight 2.5s infinite ease-in-out;
-      background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #059669 100%);
+    /* Target class khusus agar animasi pasti muncul */
+    .blink-percentage {
+      animation: digitalBlink 1.5s infinite ease-in-out !important;
     }
 
-    .glow-text-corporate {
-      animation: textGlowLight 2.5s infinite ease-in-out;
-      display: inline-block;
+    .animated-progress-bar {
+      background: linear-gradient(90deg, #10b981, #34d399, #059669, #34d399);
+      background-size: 200% 200%;
+      animation: barGlowPulse 2s infinite ease-in-out !important;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 5px;
+    .live-dot-blink {
+      animation: digitalBlink 1.2s infinite ease-in-out !important;
     }
-    ::-webkit-scrollbar-track {
-      background: #f8fafc;
+
+    /* Gradient Text Style */
+    .text-gradient-emerald {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body class="pb-20 max-w-md mx-auto bg-slate-50 border-x border-slate-200 min-h-screen text-slate-800 antialiased">
+<body class="pb-20 max-w-md mx-auto bg-slate-100 border-x border-slate-200/80 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- HEADER CORPORATE LIGHT -->
-  <header class="bg-white/90 backdrop-blur-xl p-4 sticky top-0 z-30 border-b border-slate-200 shadow-sm">
+  <!-- HEADER DIGITAL BANK STYLE -->
+  <header class="bg-white/95 backdrop-blur-md px-4 py-3.5 sticky top-0 z-30 border-b border-slate-200/80 shadow-sm">
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200">
-          <i class="fa-solid fa-chart-line text-sm"></i>
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i class="fa-solid fa-wallet text-base"></i>
         </div>
         <div>
-          <h1 class="font-bold text-sm tracking-tight text-slate-900 uppercase">
+          <h1 class="font-black text-xs tracking-wider text-slate-900 uppercase">
             Monitoring Portofolio BP
           </h1>
-          <p class="text-[10px] text-slate-500 flex items-center gap-1.5 font-medium">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 
+          <p class="text-[11px] text-slate-500 flex items-center gap-1.5 font-medium mt-0.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 live-dot-blink"></span> 
             Area Banjar <span class="text-slate-300">•</span> By Razma Mirza
           </p>
         </div>
       </div>
 
-      <button onclick="loadGSheetData()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[10px] px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-semibold active:scale-95 transition-all">
-        <span id="sync-spinner" class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> 
+      <button onclick="loadGSheetData()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 text-[10px] px-3 py-1.5 rounded-full flex items-center gap-1.5 font-bold active:scale-95 transition-all shadow-xs">
+        <span id="sync-spinner" class="w-2 h-2 bg-emerald-500 rounded-full live-dot-blink"></span> 
         <span id="sync-text">Sync Live</span>
       </button>
     </div>
@@ -104,145 +116,149 @@
 
   <main class="p-4 space-y-4">
 
-    <!-- FILTER NAMA BP -->
-    <div class="corporate-card p-3 rounded-2xl flex items-center gap-3">
-      <div class="w-8 h-8 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
-        <i class="fa-solid fa-user-tie text-xs"></i>
+    <!-- FILTER NAMA BP (Digital Dropdown Card) -->
+    <div class="bank-card p-3.5 flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
+        <i class="fa-solid fa-user-gear text-sm"></i>
       </div>
-      <span class="text-xs font-semibold text-slate-600 shrink-0">Pilih BP:</span>
-      <select id="bpFilter" onchange="updateDashboard()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 rounded-xl p-2 flex-1 focus:outline-none focus:border-indigo-500 transition-all cursor-pointer">
-        <option value="ALL">Semua BP / Point</option>
-      </select>
+      <div class="flex-1">
+        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Pilih BP / Point</label>
+        <select id="bpFilter" onchange="updateDashboard()" class="w-full bg-slate-50 border border-slate-200 text-xs font-extrabold text-slate-800 rounded-lg p-1.5 focus:outline-none focus:border-indigo-500 cursor-pointer">
+          <option value="ALL">Semua BP / Point</option>
+        </select>
+      </div>
     </div>
 
-    <!-- UTAMA: CAPAIAN ACHIEVEMENT BP (LIGHT HERO CARD) -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white rounded-2xl p-4 shadow-xl shadow-indigo-950/10 space-y-4">
+    <!-- UTAMA: CAPAIAN ACHIEVEMENT BP (DIGITAL BANK HERO CARD) -->
+    <div class="relative overflow-hidden bank-hero-card p-5 text-white space-y-4">
       <!-- Glow Accent Background -->
-      <div class="absolute -top-12 -right-12 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="flex justify-between items-center relative z-10">
-        <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-200 flex items-center gap-1.5">
-          <i class="fa-solid fa-shield-halved text-indigo-300"></i> Achievement BP Total
+        <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-award text-indigo-400"></i> Achievement BP Total
         </span>
-        <span id="labelBP" class="text-[10px] bg-white/15 text-white border border-white/20 font-bold px-3 py-1 rounded-full backdrop-blur-md">Semua BP</span>
+        <span id="labelBP" class="text-[10px] bg-white/10 text-white border border-white/15 font-bold px-3 py-1 rounded-full backdrop-blur-md shadow-xs">Semua BP</span>
       </div>
 
       <div class="relative z-10 space-y-2">
         <div class="flex justify-between items-baseline">
-          <span class="text-xs text-indigo-100 font-medium tracking-wide">Persentase Achievement</span>
-          <span id="bpAchPct" class="text-3xl font-extrabold text-emerald-300 glow-text-corporate">0%</span>
+          <span class="text-xs text-slate-300 font-semibold tracking-wide">Persentase Achievement</span>
+          
+          <!-- EFEK BERKEDIP UTAMA KORPORAT DIGITAL -->
+          <span id="bpAchPct" class="text-4xl font-black text-emerald-400 blink-percentage tracking-tight">0%</span>
         </div>
         
-        <!-- Glowing Progress Bar -->
-        <div class="w-full bg-indigo-950/60 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-inner">
-          <div id="bpAchBar" class="glow-bar-corporate h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+        <!-- Animated Glowing Progress Bar -->
+        <div class="w-full bg-slate-950/80 rounded-full h-4 overflow-hidden p-0.5 border border-white/10 shadow-inner">
+          <div id="bpAchBar" class="animated-progress-bar h-3 rounded-full transition-all duration-700" style="width: 0%"></div>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-2 text-xs relative z-10 pt-1">
-        <div class="bg-white/10 p-3 rounded-xl border border-white/10 backdrop-blur-sm">
-          <p class="text-[9px] text-indigo-200 uppercase tracking-wider font-semibold mb-1">Target BP</p>
-          <p id="bpTarget" class="font-bold text-white text-sm">0</p>
+      <div class="grid grid-cols-2 gap-2.5 text-xs relative z-10 pt-1">
+        <div class="bg-white/5 p-3 rounded-2xl border border-white/10 backdrop-blur-sm">
+          <p class="text-[9px] text-slate-400 uppercase tracking-widest font-bold mb-1">Target BP</p>
+          <p id="bpTarget" class="font-black text-white text-base">0</p>
         </div>
-        <div class="bg-emerald-500/20 p-3 rounded-xl border border-emerald-400/30 backdrop-blur-sm">
-          <p class="text-[9px] text-emerald-200 uppercase tracking-wider font-semibold mb-1">Achievement BP</p>
-          <p id="bpAch" class="font-bold text-emerald-300 text-sm">0</p>
+        <div class="bg-emerald-500/15 p-3 rounded-2xl border border-emerald-400/30 backdrop-blur-sm">
+          <p class="text-[9px] text-emerald-300 uppercase tracking-widest font-bold mb-1">Achievement BP</p>
+          <p id="bpAch" class="font-black text-emerald-400 text-base">0</p>
         </div>
       </div>
     </div>
 
-    <!-- BUCKET DPD BREAKDOWN -->
+    <!-- BUCKET DPD BREAKDOWN (DIGITAL BANK CARDS) -->
     <div class="space-y-3">
       <div class="flex items-center justify-between">
-        <h2 class="font-bold text-slate-500 text-[11px] uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-layer-group text-indigo-600"></i> Capaian DPD & Kekurangan Mitra
+        <h2 class="font-black text-slate-400 text-[10px] uppercase tracking-widest flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-pie text-indigo-500"></i> Capaian DPD & Kekurangan Mitra
         </h2>
       </div>
 
       <!-- DPD 0 (TARGET 98%) -->
-      <div class="corporate-card corporate-card-interactive rounded-2xl p-4 border-l-4 border-l-emerald-500 space-y-3">
+      <div class="bank-card p-4 border-l-4 border-l-emerald-500 space-y-3">
         <div class="flex justify-between items-center">
           <div>
-            <span class="font-bold text-slate-800 text-xs tracking-wide block">DPD 0 (Lancar)</span>
-            <span class="text-[10px] text-slate-400">Target Standard: <b class="text-slate-600">98%</b></span>
+            <span class="font-black text-slate-900 text-xs tracking-wide block">DPD 0 (Lancar)</span>
+            <span class="text-[10px] text-slate-400 font-medium">Target Standard: <b class="text-slate-700">98%</b></span>
           </div>
-          <span id="dpd0-pct" class="bg-emerald-50 text-emerald-700 text-xs font-black px-3 py-1 rounded-xl border border-emerald-200">0%</span>
+          <span id="dpd0-pct" class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded-full border border-emerald-200">0%</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-1.5 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center">
-          <div><span class="text-slate-400 block text-[9px] font-medium">Total Mitra</span><span id="dpd0-total" class="font-bold text-slate-700 text-xs">0</span></div>
-          <div><span class="text-slate-400 block text-[9px] font-medium">Paid (Bayar)</span><span id="dpd0-paid" class="font-bold text-emerald-600 text-xs">0</span></div>
-          <div><span class="text-slate-400 block text-[9px] font-medium">Persentase</span><span id="dpd0-pct2" class="font-bold text-indigo-600 text-xs">0%</span></div>
+        <div class="grid grid-cols-3 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center">
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Total Mitra</span><span id="dpd0-total" class="font-black text-slate-800 text-xs">0</span></div>
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Paid (Bayar)</span><span id="dpd0-paid" class="font-black text-emerald-600 text-xs">0</span></div>
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Persentase</span><span id="dpd0-pct2" class="font-black text-indigo-600 text-xs">0%</span></div>
         </div>
 
-        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100 flex justify-between items-center text-xs">
-          <span class="text-[10px] text-rose-700 font-semibold flex items-center gap-1.5">
-            <i class="fa-solid fa-bullseye text-rose-500"></i>Kekurangan Menuju 98%:
+        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-150 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-rose-700 font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-exclamation text-rose-500"></i>Kekurangan Menuju 98%:
           </span>
-          <span id="dpd0-kurang" class="font-black text-rose-700 bg-white px-2.5 py-0.5 rounded-lg border border-rose-200 shadow-sm">0 Mitra</span>
+          <span id="dpd0-kurang" class="font-black text-rose-700 bg-white px-2.5 py-1 rounded-lg border border-rose-200 shadow-xs">0 Mitra</span>
         </div>
       </div>
 
       <!-- DPD 1-30 (TARGET 55%) -->
-      <div class="corporate-card corporate-card-interactive rounded-2xl p-4 border-l-4 border-l-amber-500 space-y-3">
+      <div class="bank-card p-4 border-l-4 border-l-amber-500 space-y-3">
         <div class="flex justify-between items-center">
           <div>
-            <span class="font-bold text-slate-800 text-xs tracking-wide block">DPD 1 - 30</span>
-            <span class="text-[10px] text-slate-400">Target Standard: <b class="text-slate-600">55%</b></span>
+            <span class="font-black text-slate-900 text-xs tracking-wide block">DPD 1 - 30</span>
+            <span class="text-[10px] text-slate-400 font-medium">Target Standard: <b class="text-slate-700">55%</b></span>
           </div>
-          <span id="dpd130-pct" class="bg-amber-50 text-amber-700 text-xs font-black px-3 py-1 rounded-xl border border-amber-200">0%</span>
+          <span id="dpd130-pct" class="bg-amber-100 text-amber-800 text-xs font-black px-3 py-1 rounded-full border border-amber-200">0%</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-1.5 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center">
-          <div><span class="text-slate-400 block text-[9px] font-medium">Total DPD 1-30</span><span id="dpd130-total" class="font-bold text-slate-700 text-xs">0</span></div>
-          <div><span class="text-slate-400 block text-[9px] font-medium">Paid (Bayar)</span><span id="dpd130-paid" class="font-bold text-emerald-600 text-xs">0</span></div>
-          <div><span class="text-slate-400 block text-[9px] font-medium">Persentase</span><span id="dpd130-pct2" class="font-bold text-indigo-600 text-xs">0%</span></div>
+        <div class="grid grid-cols-3 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center">
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Total DPD 1-30</span><span id="dpd130-total" class="font-black text-slate-800 text-xs">0</span></div>
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Paid (Bayar)</span><span id="dpd130-paid" class="font-black text-emerald-600 text-xs">0</span></div>
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Persentase</span><span id="dpd130-pct2" class="font-black text-indigo-600 text-xs">0%</span></div>
         </div>
 
-        <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-100 flex justify-between items-center text-xs">
-          <span class="text-[10px] text-amber-800 font-semibold flex items-center gap-1.5">
+        <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-amber-800 font-bold flex items-center gap-1.5">
             <i class="fa-solid fa-person-walking-luggage text-amber-600"></i>Kekurangan Menuju 55%:
           </span>
-          <span id="dpd130-kurang" class="font-black text-amber-800 bg-white px-2.5 py-0.5 rounded-lg border border-amber-200 shadow-sm">0 Mitra</span>
+          <span id="dpd130-kurang" class="font-black text-amber-800 bg-white px-2.5 py-1 rounded-lg border border-amber-200 shadow-xs">0 Mitra</span>
         </div>
       </div>
 
       <!-- DPD 31-90 (TARGET 13%) -->
-      <div class="corporate-card corporate-card-interactive rounded-2xl p-4 border-l-4 border-l-rose-500 space-y-3">
+      <div class="bank-card p-4 border-l-4 border-l-rose-500 space-y-3">
         <div class="flex justify-between items-center">
           <div>
-            <span class="font-bold text-slate-800 text-xs tracking-wide block">DPD 31 - 90</span>
-            <span class="text-[10px] text-slate-400">Target Standard: <b class="text-slate-600">13%</b></span>
+            <span class="font-black text-slate-900 text-xs tracking-wide block">DPD 31 - 90</span>
+            <span class="text-[10px] text-slate-400 font-medium">Target Standard: <b class="text-slate-700">13%</b></span>
           </div>
-          <span id="dpd3190-pct" class="bg-rose-50 text-rose-700 text-xs font-black px-3 py-1 rounded-xl border border-rose-200">0%</span>
+          <span id="dpd3190-pct" class="bg-rose-100 text-rose-800 text-xs font-black px-3 py-1 rounded-full border border-rose-200">0%</span>
         </div>
 
-        <div class="grid grid-cols-3 gap-1.5 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center">
-          <div><span class="text-slate-400 block text-[9px] font-medium">Total DPD 31-90</span><span id="dpd3190-total" class="font-bold text-slate-700 text-xs">0</span></div>
-          <div><span class="text-slate-400 block text-[9px] font-medium">Paid (Bayar)</span><span id="dpd3190-paid" class="font-bold text-emerald-600 text-xs">0</span></div>
-          <div><span class="text-slate-400 block text-[9px] font-medium">Persentase</span><span id="dpd3190-pct2" class="font-bold text-indigo-600 text-xs">0%</span></div>
+        <div class="grid grid-cols-3 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center">
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Total DPD 31-90</span><span id="dpd3190-total" class="font-black text-slate-800 text-xs">0</span></div>
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Paid (Bayar)</span><span id="dpd3190-paid" class="font-black text-emerald-600 text-xs">0</span></div>
+          <div><span class="text-slate-400 block text-[9px] font-semibold uppercase">Persentase</span><span id="dpd3190-pct2" class="font-black text-indigo-600 text-xs">0%</span></div>
         </div>
 
-        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100 flex justify-between items-center text-xs">
-          <span class="text-[10px] text-rose-800 font-semibold flex items-center gap-1.5">
+        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-200 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-rose-800 font-bold flex items-center gap-1.5">
             <i class="fa-solid fa-triangle-exclamation text-rose-600"></i>Kekurangan Menuju 13%:
           </span>
-          <span id="dpd3190-kurang" class="font-black text-rose-800 bg-white px-2.5 py-0.5 rounded-lg border border-rose-200 shadow-sm">0 Mitra</span>
+          <span id="dpd3190-kurang" class="font-black text-rose-800 bg-white px-2.5 py-1 rounded-lg border border-rose-200 shadow-xs">0 Mitra</span>
         </div>
       </div>
 
     </div>
 
     <!-- SEKSI GRAFIK RANKING PER BP -->
-    <div class="corporate-card rounded-2xl p-4 space-y-4">
+    <div class="bank-card p-4 space-y-4">
       <div class="flex justify-between items-center">
-        <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
-          <i class="fa-solid fa-trophy text-amber-500"></i> Ranking Capaian BP
+        <h2 class="font-black text-slate-900 text-xs uppercase tracking-wider flex items-center gap-2">
+          <i class="fa-solid fa-ranking-star text-amber-500"></i> Ranking Capaian BP
         </h2>
       </div>
 
       <!-- Tab Pilihan Kategori Grafik -->
-      <div class="flex gap-1 bg-slate-100 p-1 rounded-xl text-[10px] font-bold text-slate-600">
+      <div class="flex gap-1 bg-slate-100 p-1 rounded-xl text-[10px] font-extrabold text-slate-600">
         <button onclick="switchChartTab('ach')" id="tab-ach" class="flex-1 py-1.5 rounded-lg bg-indigo-600 text-white shadow-sm transition-all">Achievement</button>
         <button onclick="switchChartTab('dpd0')" id="tab-dpd0" class="flex-1 py-1.5 rounded-lg hover:bg-slate-200 transition-all">DPD 0</button>
         <button onclick="switchChartTab('dpd130')" id="tab-dpd130" class="flex-1 py-1.5 rounded-lg hover:bg-slate-200 transition-all">DPD 1-30</button>
@@ -456,9 +472,9 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#1e293b',
-              titleFont: { family: 'Plus Jakarta Sans', weight: 'bold' },
-              bodyFont: { family: 'Plus Jakarta Sans' },
+              backgroundColor: '#0f172a',
+              titleFont: { family: 'Inter', weight: 'bold' },
+              bodyFont: { family: 'Inter' },
               callbacks: {
                 label: function(context) {
                   return ' Capaian: ' + context.parsed.x + '%';
@@ -473,14 +489,14 @@
               grid: { color: '#f1f5f9' },
               ticks: {
                 color: '#64748b',
-                font: { family: 'Plus Jakarta Sans', size: 9 },
+                font: { family: 'Inter', size: 9 },
                 callback: function(value) { return value + '%'; }
               }
             },
             y: {
               grid: { display: false },
               ticks: {
-                font: { family: 'Plus Jakarta Sans', size: 9, weight: '600' },
+                font: { family: 'Inter', size: 9, weight: '700' },
                 color: '#334155',
                 autoSkip: false
               }
