@@ -157,8 +157,8 @@
         <button onclick="switchChartTab('dpd3190')" id="tab-dpd3190" class="flex-1 py-1.5 rounded-lg hover:bg-slate-200 transition-all">DPD 31-90</button>
       </div>
 
-      <!-- Container Grafik -->
-      <div class="relative w-full" style="min-height: 280px;">
+      <!-- Container Grafik (Tinggi diperbesar agar muat 19 BP tanpa terpotong) -->
+      <div class="relative w-full" style="min-height: 650px;">
         <canvas id="rankingChart"></canvas>
       </div>
     </div>
@@ -308,22 +308,25 @@
 
     // Fungsi Render Grafik Chart.js
     function renderRankingChart() {
-      let chartData = rawSheetData.map(item => {
-        let pct = 0;
-        if(currentActiveTab === 'ach') {
-          pct = item.targetBp > 0 ? (item.achBp / item.targetBp) * 100 : 0;
-        } else if(currentActiveTab === 'dpd0') {
-          pct = item.dpd0Total > 0 ? (item.dpd0Paid / item.dpd0Total) * 100 : 0;
-        } else if(currentActiveTab === 'dpd130') {
-          pct = item.dpd130Total > 0 ? (item.dpd130Paid / item.dpd130Total) * 100 : 0;
-        } else if(currentActiveTab === 'dpd3190') {
-          pct = item.dpd3190Total > 0 ? (item.dpd3190Paid / item.dpd3190Total) * 100 : 0;
-        }
-        return {
-          bp: item.bp,
-          pct: parseFloat(pct.toFixed(1))
-        };
-      });
+      // Filter untuk membuang baris kosong agar tidak ada grafik melayang tanpa nama
+      let chartData = rawSheetData
+        .filter(item => item.bp && item.bp.trim() !== "")
+        .map(item => {
+          let pct = 0;
+          if(currentActiveTab === 'ach') {
+            pct = item.targetBp > 0 ? (item.achBp / item.targetBp) * 100 : 0;
+          } else if(currentActiveTab === 'dpd0') {
+            pct = item.dpd0Total > 0 ? (item.dpd0Paid / item.dpd0Total) * 100 : 0;
+          } else if(currentActiveTab === 'dpd130') {
+            pct = item.dpd130Total > 0 ? (item.dpd130Paid / item.dpd130Total) * 100 : 0;
+          } else if(currentActiveTab === 'dpd3190') {
+            pct = item.dpd3190Total > 0 ? (item.dpd3190Paid / item.dpd3190Total) * 100 : 0;
+          }
+          return {
+            bp: item.bp,
+            pct: parseFloat(pct.toFixed(1))
+          };
+        });
 
       // Urutkan dari persentase tertinggi ke terendah (Ranking)
       chartData.sort((a,b) => b.pct - a.pct);
@@ -361,9 +364,9 @@
             label: 'Capaian',
             data: values,
             backgroundColor: gradient,
-            borderRadius: 8,
+            borderRadius: 6,
             borderSkipped: false,
-            maxBarThickness: 24
+            maxBarThickness: 18 // Disesuaikan agar pas untuk 19 data
           }]
         },
         options: {
@@ -393,8 +396,9 @@
             y: {
               grid: { display: false },
               ticks: {
-                font: { size: 10, weight: 'bold' },
-                color: '#334155'
+                font: { size: 9, weight: 'bold' },
+                color: '#334155',
+                autoSkip: false // Memastikan ke-19 nama tampil semua dengan rapi
               }
             }
           }
