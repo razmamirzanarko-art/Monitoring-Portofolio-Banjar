@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitoring Portofolio BP</title>
+  <title>Monitoring Portofolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; }
@@ -18,11 +19,11 @@
     <div class="flex justify-between items-center">
       <div>
         <h1 class="font-bold text-base leading-tight">Monitoring Portofolio BP</h1>
-        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Realtime GSheet Sync</p>
+        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Live Google Sheets Connected</p>
       </div>
-      <span class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
-        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Live
-      </span>
+      <button onclick="loadGSheetData()" class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 font-medium active:scale-95 transition-all">
+        <span id="sync-spinner" class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> <span id="sync-text">Sync Live</span>
+      </button>
     </div>
   </header>
 
@@ -34,8 +35,6 @@
       <span class="text-xs font-medium text-slate-500">Pilih BP:</span>
       <select id="bpFilter" onchange="updateDashboard()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 rounded-lg p-1.5 flex-1 focus:outline-none">
         <option value="ALL">Semua BP / Point</option>
-        <option value="Budi - Point Banjar">Budi - Point Banjar</option>
-        <option value="Andi - Point Banjar">Andi - Point Banjar</option>
       </select>
     </div>
 
@@ -143,45 +142,101 @@
   </main>
 
   <script>
-    // SIMULASI DATA GOOGLE SHEETS BERDASARKAN KOLOM A SAMPAI S
-    let sheetData = [
-      { 
-        bp: "Budi - Point Banjar", targetBp: 100, achBp: 85,
-        dpd0Total: 50, dpd0Paid: 45, targetDpd0: 0.98,
-        dpd130Total: 40, dpd130Paid: 18, targetDpd130: 0.55,
-        dpd3190Total: 30, dpd3190Paid: 3, targetDpd3190: 0.13
-      },
-      { 
-        bp: "Andi - Point Banjar", targetBp: 80, achBp: 70,
-        dpd0Total: 60, dpd0Paid: 58, targetDpd0: 0.98,
-        dpd130Total: 30, dpd130Paid: 20, targetDpd130: 0.55,
-        dpd3190Total: 20, dpd3190Paid: 4, targetDpd3190: 0.13
-      }
-    ];
+    // LINK GSHEET PUBLISHED CSV KAKAK
+    const gsheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpeidqGfdaSJwPKd5RjJlGctuj3vCuBe5OYFtfGHSSBDQGb2nF-MbR5BALaSWIoS0wrV4Snmj2BafP/pub?output=csv';
+
+    let rawSheetData = [];
+
+    function cleanNum(val) {
+      if(!val) return 0;
+      let cleaned = String(val).replace(/[^0-9.-]/g, '');
+      return parseFloat(cleaned) || 0;
+    }
+
+    function loadGSheetData() {
+      document.getElementById('sync-text').innerText = "Loading...";
+      
+      Papa.parse(gsheetCsvUrl, {
+        download: true,
+        header: false,
+        skipEmptyLines: true,
+        complete: function(results) {
+          let rows = results.data;
+          rawSheetData = [];
+
+          // Dimulai dari baris ke-2 (mengabaikan header baris ke-1)
+          for(let i = 1; i < rows.length; i++) {
+            let row = rows[i];
+            if(row[0] && row[0].trim() !== "") {
+              rawSheetData.push({
+                bp: row[0],                            // Col A
+                targetBp: cleanNum(row[1]),            // Col B
+                achBp: cleanNum(row[2]),               // Col C
+                
+                // DPD 0
+                dpd0Total: cleanNum(row[5]),           // Col F
+                dpd0Paid: cleanNum(row[6]),            // Col G
+                
+                // DPD 1-30
+                dpd130Total: cleanNum(row[9]),         // Col J
+                dpd130Paid: cleanNum(row[10]),         // Col K
+                
+                // DPD 31-90
+                dpd3190Total: cleanNum(row[14]),       // Col P
+                dpd3190Paid: cleanNum(row[15])         // Col Q
+              });
+            }
+          }
+
+          populateBpDropdown();
+          updateDashboard();
+          document.getElementById('sync-text').innerText = "Sync Live";
+        },
+        error: function(err) {
+          alert("Gagal membaca data Google Sheets. Pastikan format CSV publik sudah aktif.");
+          document.getElementById('sync-text').innerText = "Error Sync";
+        }
+      });
+    }
+
+    function populateBpDropdown() {
+      const select = document.getElementById("bpFilter");
+      let currentVal = select.value;
+      select.innerHTML = '<option value="ALL">Semua BP / Point</option>';
+      
+      let bpList = [...new Set(rawSheetData.map(item => item.bp))];
+      bpList.forEach(bpName => {
+        let opt = document.createElement('option');
+        opt.value = bpName;
+        opt.innerText = bpName;
+        select.appendChild(opt);
+      });
+      select.value = currentVal;
+    }
 
     function updateDashboard() {
       let selectedBP = document.getElementById("bpFilter").value;
       document.getElementById("labelBP").innerText = selectedBP === "ALL" ? "Semua BP" : selectedBP;
 
-      let filtered = sheetData.filter(d => selectedBP === "ALL" || d.bp === selectedBP);
+      let filtered = rawSheetData.filter(d => selectedBP === "ALL" || d.bp === selectedBP);
 
       // 1. Hitung Achievement BP (Kolom A-D)
       let tBp = filtered.reduce((a,c) => a + c.targetBp, 0);
       let aBp = filtered.reduce((a,c) => a + c.achBp, 0);
       let pctBp = tBp > 0 ? ((aBp / tBp) * 100).toFixed(1) : 0;
 
-      document.getElementById("bpTarget").innerText = tBp + " Mitra";
-      document.getElementById("bpAch").innerText = aBp + " Mitra";
+      document.getElementById("bpTarget").innerText = tBp;
+      document.getElementById("bpAch").innerText = aBp;
       document.getElementById("bpAchPct").innerText = pctBp + "%";
       document.getElementById("bpAchBar").style.width = Math.min(pctBp, 100) + "%";
 
-      // 2. Hitung DPD 0 (Target 98%) - Kolom E-I
+      // 2. Hitung DPD 0 (Target 98%)
       calcDPD("dpd0", filtered, 'dpd0Total', 'dpd0Paid', 0.98);
 
-      // 3. Hitung DPD 1-30 (Target 55%) - Kolom J-N
+      // 3. Hitung DPD 1-30 (Target 55%)
       calcDPD("dpd130", filtered, 'dpd130Total', 'dpd130Paid', 0.55);
 
-      // 4. Hitung DPD 31-90 (Target 13%) - Kolom O-S
+      // 4. Hitung DPD 31-90 (Target 13%)
       calcDPD("dpd3190", filtered, 'dpd3190Total', 'dpd3190Paid', 0.13);
     }
 
@@ -190,7 +245,6 @@
       let paid = data.reduce((a,c) => a + c[keyPaid], 0);
       let pct = total > 0 ? ((paid / total) * 100).toFixed(1) : 0;
 
-      // Hitung Berapa Mitra lagi yang WAJIB bayar untuk capai Target%
       let targetWajibMitra = Math.ceil(total * targetPct);
       let kurangMitra = Math.max(0, targetWajibMitra - paid);
 
@@ -201,7 +255,8 @@
       document.getElementById(prefix + "-kurang").innerText = kurangMitra + " Mitra Lagi";
     }
 
-    updateDashboard();
+    // Auto-load saat aplikasi pertama kali dibuka
+    window.onload = loadGSheetData;
   </script>
 </body>
 </html>
