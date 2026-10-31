@@ -3,290 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulasi Dashboard Capaian & DPD</title>
+  <title>Monitoring Portofolio BP</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; }
-    .card-shadow { box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.06); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; }
+    .card-shadow { box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.05); }
   </style>
 </head>
-<body class="pb-20 max-w-md mx-auto min-h-screen bg-slate-50 border-x border-slate-200">
+<body class="pb-20 max-w-md mx-auto bg-slate-50 border-x border-slate-200 min-h-screen">
 
-  <!-- APP HEADER -->
+  <!-- HEADER -->
   <header class="bg-indigo-700 text-white p-4 sticky top-0 z-30 shadow-md">
     <div class="flex justify-between items-center">
       <div>
-        <h1 class="font-bold text-base leading-tight">Dashboard Capaian Tim</h1>
-        <p class="text-[11px] text-indigo-200 flex items-center gap-1">
-          <i class="fa-regular fa-file-excel"></i> Google Sheets Connected
-        </p>
+        <h1 class="font-bold text-base leading-tight">Monitoring Portofolio BP</h1>
+        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Realtime GSheet Sync</p>
       </div>
-      <div class="flex items-center gap-2">
-        <span id="sync-status" class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
-          <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Live
-        </span>
-      </div>
+      <span class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 font-medium">
+        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Live
+      </span>
     </div>
   </header>
 
   <main class="p-4 space-y-4">
 
-    <!-- FILTER TIM SALES -->
+    <!-- FILTER NAMA BP -->
     <div class="bg-white p-3 rounded-xl card-shadow border border-slate-100 flex items-center gap-2">
-      <i class="fa-solid fa-user-gear text-indigo-600 text-sm"></i>
-      <span class="text-xs font-medium text-slate-500">Filter Tim:</span>
-      <select id="salesFilter" onchange="updateDashboard()" class="bg-slate-50 border border-slate-200 text-xs text-slate-800 font-bold rounded-lg p-1.5 flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        <option value="ALL">Semua Sales (Tim Total)</option>
-        <option value="Budi">Budi</option>
-        <option value="Andi">Andi</option>
-        <option value="Siti">Siti</option>
+      <i class="fa-solid fa-user-tie text-indigo-600 text-sm"></i>
+      <span class="text-xs font-medium text-slate-500">Pilih BP:</span>
+      <select id="bpFilter" onchange="updateDashboard()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 rounded-lg p-1.5 flex-1 focus:outline-none">
+        <option value="ALL">Semua BP / Point</option>
+        <option value="Budi - Point Banjar">Budi - Point Banjar</option>
+        <option value="Andi - Point Banjar">Andi - Point Banjar</option>
       </select>
     </div>
 
-    <!-- MAIN KPI CAPAIAN CARD -->
-    <div class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white rounded-2xl p-4 card-shadow relative overflow-hidden">
-      <!-- Background pattern -->
-      <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full blur-xl pointer-events-none"></div>
-
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-200">RINGKASAN CAPAIAN</span>
-        <span id="labelFilter" class="text-[10px] bg-white/20 backdrop-blur-md text-white font-bold px-2 py-0.5 rounded-full">Semua Tim</span>
+    <!-- UTAMA: CAPAIAN ACHIEVEMENT BP -->
+    <div class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white rounded-2xl p-4 card-shadow space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-200">Achievement BP Total</span>
+        <span id="labelBP" class="text-[10px] bg-white/20 text-white font-bold px-2 py-0.5 rounded-full">Semua BP</span>
       </div>
 
-      <!-- PROGRESS % -->
-      <div class="mb-4">
+      <div>
         <div class="flex justify-between items-baseline mb-1">
-          <span class="text-xs text-indigo-200 font-medium">Persentase Terkumpul</span>
-          <span id="percentageText" class="text-3xl font-black tracking-tight text-emerald-300">0%</span>
+          <span class="text-xs text-indigo-200 font-medium">Presentase Achievement</span>
+          <span id="bpAchPct" class="text-3xl font-black text-emerald-300">0%</span>
         </div>
         <div class="w-full bg-indigo-950/50 rounded-full h-3 overflow-hidden p-0.5 border border-white/10">
-          <div id="progressBar" class="bg-emerald-400 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
+          <div id="bpAchBar" class="bg-emerald-400 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
         </div>
       </div>
 
-      <!-- METRICS GRID -->
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/10">
-          <p class="text-[10px] text-indigo-200 mb-0.5">Total Target</p>
-          <p id="totalTarget" class="font-bold text-white text-base">Rp 0 Juta</p>
+        <div class="bg-white/10 p-2.5 rounded-xl border border-white/10">
+          <p class="text-[10px] text-indigo-200 mb-0.5">Target BP</p>
+          <p id="bpTarget" class="font-bold text-white text-sm">0</p>
         </div>
-        <div class="bg-emerald-500/20 backdrop-blur-md p-2.5 rounded-xl border border-emerald-400/30">
-          <p class="text-[10px] text-emerald-200 mb-0.5">Sudah Bayar</p>
-          <p id="totalBayar" class="font-bold text-emerald-300 text-base">Rp 0 Juta</p>
-        </div>
-      </div>
-
-      <!-- KEKURANGAN -->
-      <div class="mt-2.5 bg-rose-500/20 backdrop-blur-md p-2.5 rounded-xl border border-rose-400/30 flex justify-between items-center">
-        <div>
-          <p class="text-[10px] text-rose-200 font-medium">Sisa Kekurangan</p>
-          <p class="text-[9px] text-rose-300/80">Target minus pembayaran</p>
-        </div>
-        <p id="totalKurang" class="font-black text-rose-200 text-base">Rp 0 Juta</p>
-      </div>
-    </div>
-
-    <!-- FILTER DPD TABS -->
-    <div class="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar text-xs">
-      <button onclick="setDpdFilter('ALL')" id="dpdBtn-ALL" class="dpd-tab bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm">Semua DPD</button>
-      <button onclick="setDpdFilter('DPD 0')" id="dpdBtn-DPD 0" class="dpd-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 0</button>
-      <button onclick="setDpdFilter('DPD 1-30')" id="dpdBtn-DPD 1-30" class="dpd-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 1-30</button>
-      <button onclick="setDpdFilter('DPD 31-90')" id="dpdBtn-DPD 31-90" class="dpd-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 31-90</button>
-    </div>
-
-    <!-- BUCKET DPD CARDS (RINGKASAN PER DPD) -->
-    <div class="space-y-2.5" id="dpdSummarySection">
-      <h2 class="font-bold text-slate-700 text-xs uppercase tracking-wider">Capaian Per Bucket DPD</h2>
-
-      <!-- DPD 0 -->
-      <div class="bg-white rounded-xl p-3 card-shadow border-l-4 border-emerald-500 space-y-1.5">
-        <div class="flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> DPD 0 (Lancar)
-          </span>
-          <span id="pct-dpd0" class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0%</span>
-        </div>
-        <div class="grid grid-cols-3 gap-1 text-[11px] pt-1 border-t border-slate-100 text-center">
-          <div><span class="text-slate-400 block text-[9px]">Target</span><span id="target-dpd0" class="font-semibold text-slate-700">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Bayar</span><span id="bayar-dpd0" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Kurang</span><span id="kurang-dpd0" class="font-semibold text-rose-500">0</span></div>
-        </div>
-      </div>
-
-      <!-- DPD 1-30 -->
-      <div class="bg-white rounded-xl p-3 card-shadow border-l-4 border-amber-500 space-y-1.5">
-        <div class="flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span> DPD 1 - 30
-          </span>
-          <span id="pct-dpd130" class="bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0%</span>
-        </div>
-        <div class="grid grid-cols-3 gap-1 text-[11px] pt-1 border-t border-slate-100 text-center">
-          <div><span class="text-slate-400 block text-[9px]">Target</span><span id="target-dpd130" class="font-semibold text-slate-700">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Bayar</span><span id="bayar-dpd130" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Kurang</span><span id="kurang-dpd130" class="font-bold text-rose-500">0</span></div>
-        </div>
-      </div>
-
-      <!-- DPD 31-90 -->
-      <div class="bg-white rounded-xl p-3 card-shadow border-l-4 border-rose-500 space-y-1.5">
-        <div class="flex justify-between items-center">
-          <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-rose-500"></span> DPD 31 - 90
-          </span>
-          <span id="pct-dpd3190" class="bg-rose-50 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full">0%</span>
-        </div>
-        <div class="grid grid-cols-3 gap-1 text-[11px] pt-1 border-t border-slate-100 text-center">
-          <div><span class="text-slate-400 block text-[9px]">Target</span><span id="target-dpd3190" class="font-semibold text-slate-700">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Bayar</span><span id="bayar-dpd3190" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Kurang</span><span id="kurang-dpd3190" class="font-bold text-rose-500">0</span></div>
+        <div class="bg-emerald-500/20 p-2.5 rounded-xl border border-emerald-400/30">
+          <p class="text-[10px] text-emerald-200 mb-0.5">Achievement BP</p>
+          <p id="bpAch" class="font-bold text-emerald-300 text-sm">0</p>
         </div>
       </div>
     </div>
 
-    <!-- LIST DATA NASABAH -->
-    <div class="space-y-2 pt-1">
-      <div class="flex justify-between items-center">
-        <h2 class="font-bold text-slate-700 text-xs uppercase tracking-wider">Rincian Data Debitur</h2>
-        <span class="text-[10px] text-slate-400">Update langsung via HP</span>
+    <!-- BUCKET DPD BREAKDOWN -->
+    <div class="space-y-3">
+      <h2 class="font-bold text-slate-700 text-xs uppercase tracking-wider">Capaian DPD & Kekurangan Mitra</h2>
+
+      <!-- DPD 0 (TARGET 98%) -->
+      <div class="bg-white rounded-2xl p-3.5 card-shadow border-l-4 border-emerald-500 space-y-2">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="font-bold text-slate-800 text-xs">DPD 0 (Lancar)</span>
+            <span class="text-[10px] text-slate-400 block">Target Standard: <b>98%</b></span>
+          </div>
+          <span id="dpd0-pct" class="bg-emerald-50 text-emerald-700 text-xs font-black px-2.5 py-1 rounded-full border border-emerald-200">0%</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
+          <div><span class="text-slate-400 block text-[9px]">Total Mitra</span><span id="dpd0-total" class="font-bold text-slate-700">0</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd0-paid" class="font-bold text-emerald-600">0</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd0-pct2" class="font-bold text-indigo-600">0%</span></div>
+        </div>
+
+        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-rose-700 font-semibold"><i class="fa-solid fa-bullseye text-rose-500 mr-1"></i>Kekurangan Menuju 98%:</span>
+          <span id="dpd0-kurang" class="font-black text-rose-600 bg-white px-2 py-0.5 rounded border border-rose-200">0 Mitra</span>
+        </div>
       </div>
 
-      <div id="customerList" class="space-y-2">
-        <!-- Customer items will render here -->
+      <!-- DPD 1-30 (TARGET 55%) -->
+      <div class="bg-white rounded-2xl p-3.5 card-shadow border-l-4 border-amber-500 space-y-2">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="font-bold text-slate-800 text-xs">DPD 1 - 30</span>
+            <span class="text-[10px] text-slate-400 block">Target Standard: <b>55%</b></span>
+          </div>
+          <span id="dpd130-pct" class="bg-amber-50 text-amber-700 text-xs font-black px-2.5 py-1 rounded-full border border-amber-200">0%</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
+          <div><span class="text-slate-400 block text-[9px]">Total DPD 1-30</span><span id="dpd130-total" class="font-bold text-slate-700">0</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd130-paid" class="font-bold text-emerald-600">0</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd130-pct2" class="font-bold text-indigo-600">0%</span></div>
+        </div>
+
+        <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-amber-800 font-semibold"><i class="fa-solid fa-person-walking-luggage mr-1"></i>Kekurangan Menuju 55%:</span>
+          <span id="dpd130-kurang" class="font-black text-amber-700 bg-white px-2 py-0.5 rounded border border-amber-300">0 Mitra</span>
+        </div>
       </div>
+
+      <!-- DPD 31-90 (TARGET 13%) -->
+      <div class="bg-white rounded-2xl p-3.5 card-shadow border-l-4 border-rose-500 space-y-2">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="font-bold text-slate-800 text-xs">DPD 31 - 90</span>
+            <span class="text-[10px] text-slate-400 block">Target Standard: <b>13%</b></span>
+          </div>
+          <span id="dpd3190-pct" class="bg-rose-50 text-rose-700 text-xs font-black px-2.5 py-1 rounded-full border border-rose-200">0%</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
+          <div><span class="text-slate-400 block text-[9px]">Total DPD 31-90</span><span id="dpd3190-total" class="font-bold text-slate-700">0</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd3190-paid" class="font-bold text-emerald-600">0</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd3190-pct2" class="font-bold text-indigo-600">0%</span></div>
+        </div>
+
+        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-200 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-rose-800 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Kekurangan Menuju 13%:</span>
+          <span id="dpd3190-kurang" class="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-rose-300">0 Mitra</span>
+        </div>
+      </div>
+
     </div>
 
   </main>
 
   <script>
-    // DATA DUMMY (SAMA SEPERTI STRUKTUR GOOGLE SHEETS)
-    let dbData = [
-      { id: 1, name: "PT Maju Bersama", sales: "Budi", target: 50000000, bayar: 50000000, dpd: "DPD 0" },
-      { id: 2, name: "Toko Sembako Berkah", sales: "Andi", target: 20000000, bayar: 15000000, dpd: "DPD 1-30" },
-      { id: 3, name: "CV Utama Karya", sales: "Budi", target: 40000000, bayar: 30000000, dpd: "DPD 1-30" },
-      { id: 4, name: "UD Makmur Jaya", sales: "Siti", target: 30000000, bayar: 10000000, dpd: "DPD 31-90" },
-      { id: 5, name: "Resto Selera Anda", sales: "Andi", target: 40000000, bayar: 35000000, dpd: "DPD 31-90" }
+    // SIMULASI DATA GOOGLE SHEETS BERDASARKAN KOLOM A SAMPAI S
+    let sheetData = [
+      { 
+        bp: "Budi - Point Banjar", targetBp: 100, achBp: 85,
+        dpd0Total: 50, dpd0Paid: 45, targetDpd0: 0.98,
+        dpd130Total: 40, dpd130Paid: 18, targetDpd130: 0.55,
+        dpd3190Total: 30, dpd3190Paid: 3, targetDpd3190: 0.13
+      },
+      { 
+        bp: "Andi - Point Banjar", targetBp: 80, achBp: 70,
+        dpd0Total: 60, dpd0Paid: 58, targetDpd0: 0.98,
+        dpd130Total: 30, dpd130Paid: 20, targetDpd130: 0.55,
+        dpd3190Total: 20, dpd3190Paid: 4, targetDpd3190: 0.13
+      }
     ];
 
-    let activeDpdFilter = "ALL";
-
-    function formatJuta(val) {
-      return "Rp " + (val / 1000000).toFixed(1) + " Juta";
-    }
-
-    function setDpdFilter(dpd) {
-      activeDpdFilter = dpd;
-      document.querySelectorAll('.dpd-tab').forEach(b => {
-        b.className = "dpd-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap";
-      });
-      document.getElementById('dpdBtn-' + dpd).className = "dpd-tab bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm";
-      updateDashboard();
-    }
-
     function updateDashboard() {
-      const selectedSales = document.getElementById("salesFilter").value;
-      document.getElementById("labelFilter").innerText = selectedSales === "ALL" ? "Semua Tim" : "Sales: " + selectedSales;
+      let selectedBP = document.getElementById("bpFilter").value;
+      document.getElementById("labelBP").innerText = selectedBP === "ALL" ? "Semua BP" : selectedBP;
 
-      // Filter Data
-      let filtered = dbData.filter(item => {
-        const matchSales = selectedSales === "ALL" || item.sales === selectedSales;
-        const matchDpd = activeDpdFilter === "ALL" || item.dpd === activeDpdFilter;
-        return matchSales && matchDpd;
-      });
+      let filtered = sheetData.filter(d => selectedBP === "ALL" || d.bp === selectedBP);
 
-      // Total Overall Metrics
-      let totalTarget = filtered.reduce((acc, curr) => acc + curr.target, 0);
-      let totalBayar = filtered.reduce((acc, curr) => acc + curr.bayar, 0);
-      let totalKurang = totalTarget - totalBayar;
-      let pct = totalTarget > 0 ? ((totalBayar / totalTarget) * 100).toFixed(1) : 0;
+      // 1. Hitung Achievement BP (Kolom A-D)
+      let tBp = filtered.reduce((a,c) => a + c.targetBp, 0);
+      let aBp = filtered.reduce((a,c) => a + c.achBp, 0);
+      let pctBp = tBp > 0 ? ((aBp / tBp) * 100).toFixed(1) : 0;
 
-      // Update Header KPI
-      document.getElementById("totalTarget").innerText = formatJuta(totalTarget);
-      document.getElementById("totalBayar").innerText = formatJuta(totalBayar);
-      document.getElementById("totalKurang").innerText = formatJuta(totalKurang);
-      document.getElementById("percentageText").innerText = pct + "%";
-      document.getElementById("progressBar").style.width = Math.min(pct, 100) + "%";
+      document.getElementById("bpTarget").innerText = tBp + " Mitra";
+      document.getElementById("bpAch").innerText = aBp + " Mitra";
+      document.getElementById("bpAchPct").innerText = pctBp + "%";
+      document.getElementById("bpAchBar").style.width = Math.min(pctBp, 100) + "%";
 
-      // Update Breakdown Bucket DPD
-      updateBucketDPD("DPD 0", "dpd0", selectedSales);
-      updateBucketDPD("DPD 1-30", "dpd130", selectedSales);
-      updateBucketDPD("DPD 31-90", "dpd3190", selectedSales);
+      // 2. Hitung DPD 0 (Target 98%) - Kolom E-I
+      calcDPD("dpd0", filtered, 'dpd0Total', 'dpd0Paid', 0.98);
 
-      // Render Customer List
-      renderCustomerList(filtered);
+      // 3. Hitung DPD 1-30 (Target 55%) - Kolom J-N
+      calcDPD("dpd130", filtered, 'dpd130Total', 'dpd130Paid', 0.55);
+
+      // 4. Hitung DPD 31-90 (Target 13%) - Kolom O-S
+      calcDPD("dpd3190", filtered, 'dpd3190Total', 'dpd3190Paid', 0.13);
     }
 
-    function updateBucketDPD(dpdKey, elemId, selectedSales) {
-      let dpdData = dbData.filter(i => i.dpd === dpdKey && (selectedSales === "ALL" || i.sales === selectedSales));
-      let t = dpdData.reduce((a, c) => a + c.target, 0);
-      let b = dpdData.reduce((a, c) => a + c.bayar, 0);
-      let k = t - b;
-      let p = t > 0 ? ((b / t) * 100).toFixed(1) : 0;
+    function calcDPD(prefix, data, keyTotal, keyPaid, targetPct) {
+      let total = data.reduce((a,c) => a + c[keyTotal], 0);
+      let paid = data.reduce((a,c) => a + c[keyPaid], 0);
+      let pct = total > 0 ? ((paid / total) * 100).toFixed(1) : 0;
 
-      document.getElementById("target-" + elemId).innerText = (t / 1000000).toFixed(0) + " Jt";
-      document.getElementById("bayar-" + elemId).innerText = (b / 1000000).toFixed(0) + " Jt";
-      document.getElementById("kurang-" + elemId).innerText = (k / 1000000).toFixed(0) + " Jt";
-      document.getElementById("pct-" + elemId).innerText = p + "%";
+      // Hitung Berapa Mitra lagi yang WAJIB bayar untuk capai Target%
+      let targetWajibMitra = Math.ceil(total * targetPct);
+      let kurangMitra = Math.max(0, targetWajibMitra - paid);
+
+      document.getElementById(prefix + "-total").innerText = total;
+      document.getElementById(prefix + "-paid").innerText = paid;
+      document.getElementById(prefix + "-pct").innerText = pct + "%";
+      document.getElementById(prefix + "-pct2").innerText = pct + "%";
+      document.getElementById(prefix + "-kurang").innerText = kurangMitra + " Mitra Lagi";
     }
 
-    function renderCustomerList(list) {
-      const container = document.getElementById("customerList");
-      container.innerHTML = "";
-
-      if(list.length === 0) {
-        container.innerHTML = <p class="text-center text-xs text-slate-400 py-4">Tidak ada data debitur</p>;
-        return;
-      }
-
-      list.forEach(item => {
-        let kurang = item.target - item.bayar;
-        let pct = ((item.bayar / item.target) * 100).toFixed(0);
-        let badgeColor = item.dpd === 'DPD 0' ? 'bg-emerald-50 text-emerald-700' : (item.dpd === 'DPD 1-30' ? 'bg-amber-50 text-amber-700' : 'bg-rose-50 text-rose-700');
-
-        let card = document.createElement('div');
-        card.className = "bg-white p-3 rounded-xl card-shadow border border-slate-100 flex justify-between items-center";
-        card.innerHTML = `
-          <div class="space-y-0.5">
-            <div class="flex items-center gap-1.5">
-              <span class="font-bold text-slate-800 text-xs">${item.name}</span>
-              <span class="${badgeColor} text-[9px] font-bold px-1.5 py-0.2 rounded">${item.dpd}</span>
-            </div>
-            <p class="text-[10px] text-slate-400">Sales: <b class="text-slate-600">${item.sales}</b> | Target: ${(item.target/1000000).toFixed(0)} Jt</p>
-          </div>
-          <div class="text-right space-y-1">
-            <div>
-              <span class="text-xs font-bold text-emerald-600 block">Bayar: ${(item.bayar/1000000).toFixed(1)} Jt</span>
-              <span class="text-[9px] text-rose-500 font-medium block">Kurang: ${(kurang/1000000).toFixed(1)} Jt (${pct}%)</span>
-            </div>
-            <button onclick="simulasiTambahBayar(${item.id})" class="bg-indigo-50 text-indigo-600 active:bg-indigo-100 text-[10px] font-bold px-2 py-1 rounded-md border border-indigo-200">
-              <i class="fa-solid fa-plus text-[8px]"></i> 5 Jt
-            </button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function simulasiTambahBayar(id) {
-      let item = dbData.find(i => i.id === id);
-      if(item && item.bayar < item.target) {
-        item.bayar = Math.min(item.target, item.bayar + 5000000);
-        
-        // Flash sync indicator
-        let status = document.getElementById("sync-status");
-        status.innerHTML = <i class="fa-solid fa-spinner animate-spin"></i> Saving...;
-        setTimeout(() => {
-          status.innerHTML = <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Live;
-        }, 400);
-
-        updateDashboard();
-      }
-    }
-
-    // Initialize
     updateDashboard();
   </script>
 </body>
