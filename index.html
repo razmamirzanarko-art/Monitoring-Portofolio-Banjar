@@ -225,8 +225,8 @@
       let aBp = filtered.reduce((a,c) => a + c.achBp, 0);
       let pctBp = tBp > 0 ? ((aBp / tBp) * 100).toFixed(1) : 0;
 
-      document.getElementById("bpTarget").innerText = tBp;
-      document.getElementById("bpAch").innerText = aBp;
+      document.getElementById("bpTarget").innerText = tBp.toLocaleString('id-ID');
+      document.getElementById("bpAch").innerText = aBp.toLocaleString('id-ID');
       document.getElementById("bpAchPct").innerText = pctBp + "%";
       document.getElementById("bpAchBar").style.width = Math.min(pctBp, 100) + "%";
 
