@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitoring Portofolio Banjar</title>
+  <title>Monitoring Portofolio Cabang & BP</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -11,6 +11,7 @@
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; }
     .card-shadow { box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.05); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="pb-20 max-w-md mx-auto bg-slate-50 border-x border-slate-200 min-h-screen">
@@ -20,7 +21,7 @@
     <div class="flex justify-between items-center">
       <div>
         <h1 class="font-bold text-base leading-tight">Monitoring Portofolio</h1>
-        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Live GSheet</p>
+        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Live GSheet Connected</p>
       </div>
       <button onclick="loadGSheetData()" class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 font-medium active:scale-95 transition-all">
         <span id="sync-spinner" class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> <span id="sync-text">Sync Live</span>
@@ -84,7 +85,7 @@
         <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
           <div><span class="text-slate-400 block text-[9px]">Total Mitra</span><span id="dpd0-total" class="font-bold text-slate-700">0</span></div>
           <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd0-paid" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd0-pct2" class="font-bold text-indigo-600">0%</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Capaian %</span><span id="dpd0-pct2" class="font-bold text-indigo-600">0%</span></div>
         </div>
         <div class="bg-rose-50 p-2 rounded-xl border border-rose-100 flex justify-between items-center text-xs">
           <span class="text-[10px] text-rose-700 font-semibold"><i class="fa-solid fa-bullseye text-rose-500 mr-1"></i>Kurang (Target 98%):</span>
@@ -104,7 +105,7 @@
         <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
           <div><span class="text-slate-400 block text-[9px]">Total DPD 1-30</span><span id="dpd130-total" class="font-bold text-slate-700">0</span></div>
           <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd130-paid" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd130-pct2" class="font-bold text-indigo-600">0%</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Capaian %</span><span id="dpd130-pct2" class="font-bold text-indigo-600">0%</span></div>
         </div>
         <div class="bg-amber-50 p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
           <span class="text-[10px] text-amber-800 font-semibold"><i class="fa-solid fa-person-walking-luggage mr-1"></i>Kurang (Target 55%):</span>
@@ -124,7 +125,7 @@
         <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
           <div><span class="text-slate-400 block text-[9px]">Total DPD 31-90</span><span id="dpd3190-total" class="font-bold text-slate-700">0</span></div>
           <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd3190-paid" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd3190-pct2" class="font-bold text-indigo-600">0%</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Capaian %</span><span id="dpd3190-pct2" class="font-bold text-indigo-600">0%</span></div>
         </div>
         <div class="bg-rose-50 p-2 rounded-xl border border-rose-200 flex justify-between items-center text-xs">
           <span class="text-[10px] text-rose-800 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Kurang (Target 13%):</span>
@@ -140,7 +141,6 @@
         <span class="text-[10px] text-slate-400">Urut Berdasarkan Capaian</span>
       </div>
 
-      <!-- Kategori Tombol Filter Ranking -->
       <div class="flex gap-1 overflow-x-auto pb-1 no-scrollbar text-xs">
         <button onclick="setRankCategory('disb')" id="btn-rank-disb" class="rank-tab bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm">Disbursement</button>
         <button onclick="setRankCategory('dpd0')" id="btn-rank-dpd0" class="rank-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 0</button>
@@ -148,7 +148,6 @@
         <button onclick="setRankCategory('dpd3190')" id="btn-rank-dpd3190" class="rank-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 31-90</button>
       </div>
 
-      <!-- Container Daftar Ranking -->
       <div id="leaderboardContainer" class="space-y-2"></div>
     </div>
 
@@ -228,13 +227,12 @@
 
       let filtered = rawSheetData.filter(d => selectedPoint === "ALL" || d.point === selectedPoint);
 
-      // Hitung Total Cabang
       let tBp = filtered.reduce((a,c) => a + c.targetBp, 0);
       let aBp = filtered.reduce((a,c) => a + c.achBp, 0);
       let pctBp = tBp > 0 ? ((aBp / tBp) * 100).toFixed(1) : 0;
 
-      document.getElementById("cabangTarget").innerText = formatNumber(tBp) + " Mitra";
-      document.getElementById("cabangAch").innerText = formatNumber(aBp) + " Mitra";
+      document.getElementById("cabangTarget").innerText = formatNumber(tBp);
+      document.getElementById("cabangAch").innerText = formatNumber(aBp);
       document.getElementById("cabangAchPct").innerText = pctBp + "%";
       document.getElementById("cabangAchBar").style.width = Math.min(pctBp, 100) + "%";
 
@@ -263,7 +261,6 @@
       const container = document.getElementById("leaderboardContainer");
       container.innerHTML = "";
 
-      // Salin array lalu urutkan (Sorting) berdasarkan kategori yang dipilih
       let sortedList = [...list].sort((a, b) => {
         let valA = 0, valB = 0;
         if(currentRankCategory === 'disb') {
@@ -279,7 +276,7 @@
           valA = a.dpd3190Total > 0 ? (a.dpd3190Paid / a.dpd3190Total) : 0;
           valB = b.dpd3190Total > 0 ? (b.dpd3190Paid / b.dpd3190Total) : 0;
         }
-        return valB - valA; // Urutkan dari yang terbesar (Descending)
+        return valB - valA;
       });
 
       if(sortedList.length === 0) {
@@ -290,7 +287,6 @@
       sortedList.forEach((item, index) => {
         let score = 0;
         let subText = "";
-        let badgeColor = "bg-slate-100 text-slate-600";
 
         if(currentRankCategory === 'disb') {
           score = item.targetBp > 0 ? ((item.achBp / item.targetBp) * 100).toFixed(1) : 0;
@@ -306,7 +302,6 @@
           subText = Paid: ${formatNumber(item.dpd3190Paid)} / Total: ${formatNumber(item.dpd3190Total)};
         }
 
-        // Styling untuk ranking 1, 2, 3
         let rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 font-bold text-xs">#${index + 1}</span>;
         if(index === 0) rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-amber-400 text-white font-bold text-xs shadow-sm"><i class="fa-solid fa-crown text-[10px]"></i></span>;
         else if(index === 1) rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-300 text-white font-bold text-xs">#2</span>;
