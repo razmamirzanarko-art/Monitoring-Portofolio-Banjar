@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monitoring Portofolio Cabang & BP</title>
+  <title>Monitoring Portofolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; }
     .card-shadow { box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.05); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="pb-20 max-w-md mx-auto bg-slate-50 border-x border-slate-200 min-h-screen">
@@ -20,8 +18,8 @@
   <header class="bg-indigo-700 text-white p-4 sticky top-0 z-30 shadow-md">
     <div class="flex justify-between items-center">
       <div>
-        <h1 class="font-bold text-base leading-tight">Monitoring Portofolio</h1>
-        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Live GSheet Connected</p>
+        <h1 class="font-bold text-base leading-tight">Monitoring Portofolio BP</h1>
+        <p class="text-[11px] text-indigo-200"><i class="fa-solid fa-file-excel"></i> Live Google Sheets Connected</p>
       </div>
       <button onclick="loadGSheetData()" class="bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 font-medium active:scale-95 transition-all">
         <span id="sync-spinner" class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> <span id="sync-text">Sync Live</span>
@@ -31,49 +29,49 @@
 
   <main class="p-4 space-y-4">
 
-    <!-- PILIH CABANG / POINT -->
+    <!-- FILTER NAMA BP -->
     <div class="bg-white p-3 rounded-xl card-shadow border border-slate-100 flex items-center gap-2">
-      <i class="fa-solid fa-building text-indigo-600 text-sm"></i>
-      <span class="text-xs font-medium text-slate-500">Pilih Cabang:</span>
-      <select id="pointFilter" onchange="updateDashboard()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 rounded-lg p-1.5 flex-1 focus:outline-none">
-        <option value="ALL">Semua Cabang / Point</option>
+      <i class="fa-solid fa-user-tie text-indigo-600 text-sm"></i>
+      <span class="text-xs font-medium text-slate-500">Pilih BP:</span>
+      <select id="bpFilter" onchange="updateDashboard()" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 rounded-lg p-1.5 flex-1 focus:outline-none">
+        <option value="ALL">Semua BP / Point</option>
       </select>
     </div>
 
-    <!-- 1. KOTAK ATAS: CAPAIAN TOTAL CABANG -->
+    <!-- UTAMA: CAPAIAN ACHIEVEMENT BP -->
     <div class="bg-gradient-to-br from-indigo-900 to-indigo-700 text-white rounded-2xl p-4 card-shadow space-y-3">
       <div class="flex justify-between items-center">
-        <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-200">TOTAL CAPAIAN CABANG</span>
-        <span id="labelCabang" class="text-[10px] bg-white/20 text-white font-bold px-2 py-0.5 rounded-full">Semua Cabang</span>
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-200">Achievement BP Total</span>
+        <span id="labelBP" class="text-[10px] bg-white/20 text-white font-bold px-2 py-0.5 rounded-full">Semua BP</span>
       </div>
 
       <div>
         <div class="flex justify-between items-baseline mb-1">
-          <span class="text-xs text-indigo-200 font-medium">Achievement Cabang</span>
-          <span id="cabangAchPct" class="text-3xl font-black text-emerald-300">0%</span>
+          <span class="text-xs text-indigo-200 font-medium">Presentase Achievement</span>
+          <span id="bpAchPct" class="text-3xl font-black text-emerald-300">0%</span>
         </div>
         <div class="w-full bg-indigo-950/50 rounded-full h-3 overflow-hidden p-0.5 border border-white/10">
-          <div id="cabangAchBar" class="bg-emerald-400 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
+          <div id="bpAchBar" class="bg-emerald-400 h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2 text-xs">
         <div class="bg-white/10 p-2.5 rounded-xl border border-white/10">
-          <p class="text-[10px] text-indigo-200 mb-0.5">Target Total</p>
-          <p id="cabangTarget" class="font-bold text-white text-sm">0</p>
+          <p class="text-[10px] text-indigo-200 mb-0.5">Target BP</p>
+          <p id="bpTarget" class="font-bold text-white text-sm">0</p>
         </div>
         <div class="bg-emerald-500/20 p-2.5 rounded-xl border border-emerald-400/30">
-          <p class="text-[10px] text-emerald-200 mb-0.5">Total Realisasi</p>
-          <p id="cabangAch" class="font-bold text-emerald-300 text-sm">0</p>
+          <p class="text-[10px] text-emerald-200 mb-0.5">Achievement BP</p>
+          <p id="bpAch" class="font-bold text-emerald-300 text-sm">0</p>
         </div>
       </div>
     </div>
 
-    <!-- 2. RINGKASAN PORTOFOLIO DPD CABANG -->
+    <!-- BUCKET DPD BREAKDOWN -->
     <div class="space-y-3">
-      <h2 class="font-bold text-slate-700 text-xs uppercase tracking-wider">Portofolio DPD Cabang</h2>
+      <h2 class="font-bold text-slate-700 text-xs uppercase tracking-wider">Capaian DPD & Kekurangan Mitra</h2>
 
-      <!-- DPD 0 -->
+      <!-- DPD 0 (TARGET 98%) -->
       <div class="bg-white rounded-2xl p-3.5 card-shadow border-l-4 border-emerald-500 space-y-2">
         <div class="flex justify-between items-center">
           <div>
@@ -82,18 +80,20 @@
           </div>
           <span id="dpd0-pct" class="bg-emerald-50 text-emerald-700 text-xs font-black px-2.5 py-1 rounded-full border border-emerald-200">0%</span>
         </div>
+
         <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
           <div><span class="text-slate-400 block text-[9px]">Total Mitra</span><span id="dpd0-total" class="font-bold text-slate-700">0</span></div>
           <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd0-paid" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Capaian %</span><span id="dpd0-pct2" class="font-bold text-indigo-600">0%</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd0-pct2" class="font-bold text-indigo-600">0%</span></div>
         </div>
-        <div class="bg-rose-50 p-2 rounded-xl border border-rose-100 flex justify-between items-center text-xs">
-          <span class="text-[10px] text-rose-700 font-semibold"><i class="fa-solid fa-bullseye text-rose-500 mr-1"></i>Kurang (Target 98%):</span>
-          <span id="dpd0-kurang" class="font-black text-rose-600 bg-white px-2 py-0.5 rounded border border-rose-200">0 Mitra Lagi</span>
+
+        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-100 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-rose-700 font-semibold"><i class="fa-solid fa-bullseye text-rose-500 mr-1"></i>Kekurangan Menuju 98%:</span>
+          <span id="dpd0-kurang" class="font-black text-rose-600 bg-white px-2 py-0.5 rounded border border-rose-200">0 Mitra</span>
         </div>
       </div>
 
-      <!-- DPD 1-30 -->
+      <!-- DPD 1-30 (TARGET 55%) -->
       <div class="bg-white rounded-2xl p-3.5 card-shadow border-l-4 border-amber-500 space-y-2">
         <div class="flex justify-between items-center">
           <div>
@@ -102,18 +102,20 @@
           </div>
           <span id="dpd130-pct" class="bg-amber-50 text-amber-700 text-xs font-black px-2.5 py-1 rounded-full border border-amber-200">0%</span>
         </div>
+
         <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
           <div><span class="text-slate-400 block text-[9px]">Total DPD 1-30</span><span id="dpd130-total" class="font-bold text-slate-700">0</span></div>
           <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd130-paid" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Capaian %</span><span id="dpd130-pct2" class="font-bold text-indigo-600">0%</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd130-pct2" class="font-bold text-indigo-600">0%</span></div>
         </div>
-        <div class="bg-amber-50 p-2 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
-          <span class="text-[10px] text-amber-800 font-semibold"><i class="fa-solid fa-person-walking-luggage mr-1"></i>Kurang (Target 55%):</span>
-          <span id="dpd130-kurang" class="font-black text-amber-700 bg-white px-2 py-0.5 rounded border border-amber-300">0 Mitra Lagi</span>
+
+        <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-amber-800 font-semibold"><i class="fa-solid fa-person-walking-luggage mr-1"></i>Kekurangan Menuju 55%:</span>
+          <span id="dpd130-kurang" class="font-black text-amber-700 bg-white px-2 py-0.5 rounded border border-amber-300">0 Mitra</span>
         </div>
       </div>
 
-      <!-- DPD 31-90 -->
+      <!-- DPD 31-90 (TARGET 13%) -->
       <div class="bg-white rounded-2xl p-3.5 card-shadow border-l-4 border-rose-500 space-y-2">
         <div class="flex justify-between items-center">
           <div>
@@ -122,209 +124,138 @@
           </div>
           <span id="dpd3190-pct" class="bg-rose-50 text-rose-700 text-xs font-black px-2.5 py-1 rounded-full border border-rose-200">0%</span>
         </div>
+
         <div class="grid grid-cols-3 gap-1 text-[11px] bg-slate-50 p-2 rounded-xl text-center border border-slate-100">
           <div><span class="text-slate-400 block text-[9px]">Total DPD 31-90</span><span id="dpd3190-total" class="font-bold text-slate-700">0</span></div>
           <div><span class="text-slate-400 block text-[9px]">Paid (Bayar)</span><span id="dpd3190-paid" class="font-bold text-emerald-600">0</span></div>
-          <div><span class="text-slate-400 block text-[9px]">Capaian %</span><span id="dpd3190-pct2" class="font-bold text-indigo-600">0%</span></div>
+          <div><span class="text-slate-400 block text-[9px]">Presentase</span><span id="dpd3190-pct2" class="font-bold text-indigo-600">0%</span></div>
         </div>
-        <div class="bg-rose-50 p-2 rounded-xl border border-rose-200 flex justify-between items-center text-xs">
-          <span class="text-[10px] text-rose-800 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Kurang (Target 13%):</span>
-          <span id="dpd3190-kurang" class="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-rose-300">0 Mitra Lagi</span>
+
+        <div class="bg-rose-50 p-2.5 rounded-xl border border-rose-200 flex justify-between items-center text-xs">
+          <span class="text-[10px] text-rose-800 font-semibold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Kekurangan Menuju 13%:</span>
+          <span id="dpd3190-kurang" class="font-black text-rose-700 bg-white px-2 py-0.5 rounded border border-rose-300">0 Mitra</span>
         </div>
       </div>
-    </div>
 
-    <!-- 3. TABEL PERINGKAT (LEADERBOARD RANKING) PER BP -->
-    <div class="space-y-3 pt-2">
-      <div class="flex justify-between items-center">
-        <h2 class="font-bold text-slate-700 text-xs uppercase tracking-wider"><i class="fa-solid fa-trophy text-amber-500 mr-1"></i> Peringkat / Leaderboard BP</h2>
-        <span class="text-[10px] text-slate-400">Urut Berdasarkan Capaian</span>
-      </div>
-
-      <div class="flex gap-1 overflow-x-auto pb-1 no-scrollbar text-xs">
-        <button onclick="setRankCategory('disb')" id="btn-rank-disb" class="rank-tab bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm">Disbursement</button>
-        <button onclick="setRankCategory('dpd0')" id="btn-rank-dpd0" class="rank-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 0</button>
-        <button onclick="setRankCategory('dpd130')" id="btn-rank-dpd130" class="rank-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 1-30</button>
-        <button onclick="setRankCategory('dpd3190')" id="btn-rank-dpd3190" class="rank-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap">DPD 31-90</button>
-      </div>
-
-      <div id="leaderboardContainer" class="space-y-2"></div>
     </div>
 
   </main>
 
   <script>
-    const gsheetCsvUrl = ' 'https://docs.google.com/spreadsheets/d/19_wZ03LHRiNM-onBS3EoR7TMUP9-SIS9JYEdAzYsyo/export?format=csv&gid=0';';
+    // LINK GSHEET PUBLISHED CSV KAKAK
+    const gsheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpeidqGfdaSJwPKd5RjJlGctuj3vCuBe5OYFtfGHSSBDQGb2nF-MbR5BALaSWIoS0wrV4Snmj2BafP/pub?output=csv';
+
     let rawSheetData = [];
-    let currentRankCategory = 'disb';
 
     function cleanNum(val) {
       if(!val) return 0;
-      return parseFloat(String(val).replace(/[^0-9.-]/g, '')) || 0;
-    }
-
-    function formatNumber(num) {
-      return num.toLocaleString('id-ID');
+      let cleaned = String(val).replace(/[^0-9.-]/g, '');
+      return parseFloat(cleaned) || 0;
     }
 
     function loadGSheetData() {
       document.getElementById('sync-text').innerText = "Loading...";
+      
       Papa.parse(gsheetCsvUrl, {
-        download: true, header: false, skipEmptyLines: true,
+        download: true,
+        header: false,
+        skipEmptyLines: true,
         complete: function(results) {
           let rows = results.data;
           rawSheetData = [];
 
+          // Dimulai dari baris ke-2 (mengabaikan header baris ke-1)
           for(let i = 1; i < rows.length; i++) {
             let row = rows[i];
-            if(row[1] && row[1].trim() !== "") {
+            if(row[0] && row[0].trim() !== "") {
               rawSheetData.push({
-                point: row[0] ? row[0].trim() : "Utama",
-                bp: row[1].trim(),
-                targetBp: cleanNum(row[2]),
-                achBp: cleanNum(row[3]),
-                dpd0Total: cleanNum(row[6]),
-                dpd0Paid: cleanNum(row[7]),
-                dpd130Total: cleanNum(row[10]),
-                dpd130Paid: cleanNum(row[11]),
-                dpd3190Total: cleanNum(row[14]),
-                dpd3190Paid: cleanNum(row[15])
+                bp: row[0],                            // Col A
+                targetBp: cleanNum(row[1]),            // Col B
+                achBp: cleanNum(row[2]),               // Col C
+                
+                // DPD 0
+                dpd0Total: cleanNum(row[5]),           // Col F
+                dpd0Paid: cleanNum(row[6]),            // Col G
+                
+                // DPD 1-30
+                dpd130Total: cleanNum(row[9]),         // Col J
+                dpd130Paid: cleanNum(row[10]),         // Col K
+                
+                // DPD 31-90
+                dpd3190Total: cleanNum(row[14]),       // Col P
+                dpd3190Paid: cleanNum(row[15])         // Col Q
               });
             }
           }
-          populateDropdown();
+
+          populateBpDropdown();
           updateDashboard();
           document.getElementById('sync-text').innerText = "Sync Live";
+        },
+        error: function(err) {
+          alert("Gagal membaca data Google Sheets. Pastikan format CSV publik sudah aktif.");
+          document.getElementById('sync-text').innerText = "Error Sync";
         }
       });
     }
 
-    function populateDropdown() {
-      const select = document.getElementById("pointFilter");
-      let currVal = select.value;
-      select.innerHTML = '<option value="ALL">Semua Cabang / Point</option>';
-      let points = [...new Set(rawSheetData.map(i => i.point))];
-      points.forEach(p => {
+    function populateBpDropdown() {
+      const select = document.getElementById("bpFilter");
+      let currentVal = select.value;
+      select.innerHTML = '<option value="ALL">Semua BP / Point</option>';
+      
+      let bpList = [...new Set(rawSheetData.map(item => item.bp))];
+      bpList.forEach(bpName => {
         let opt = document.createElement('option');
-        opt.value = p; opt.innerText = p;
+        opt.value = bpName;
+        opt.innerText = bpName;
         select.appendChild(opt);
       });
-      select.value = currVal;
-    }
-
-    function setRankCategory(cat) {
-      currentRankCategory = cat;
-      document.querySelectorAll('.rank-tab').forEach(b => {
-        b.className = "rank-tab bg-white text-slate-600 border border-slate-200 font-medium px-3 py-1.5 rounded-lg whitespace-nowrap";
-      });
-      document.getElementById('btn-rank-' + cat).className = "rank-tab bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-sm";
-      updateDashboard();
+      select.value = currentVal;
     }
 
     function updateDashboard() {
-      let selectedPoint = document.getElementById("pointFilter").value;
-      document.getElementById("labelCabang").innerText = selectedPoint === "ALL" ? "Semua Cabang" : selectedPoint;
+      let selectedBP = document.getElementById("bpFilter").value;
+      document.getElementById("labelBP").innerText = selectedBP === "ALL" ? "Semua BP" : selectedBP;
 
-      let filtered = rawSheetData.filter(d => selectedPoint === "ALL" || d.point === selectedPoint);
+      let filtered = rawSheetData.filter(d => selectedBP === "ALL" || d.bp === selectedBP);
 
+      // 1. Hitung Achievement BP (Kolom A-D)
       let tBp = filtered.reduce((a,c) => a + c.targetBp, 0);
       let aBp = filtered.reduce((a,c) => a + c.achBp, 0);
       let pctBp = tBp > 0 ? ((aBp / tBp) * 100).toFixed(1) : 0;
 
-      document.getElementById("cabangTarget").innerText = formatNumber(tBp);
-      document.getElementById("cabangAch").innerText = formatNumber(aBp);
-      document.getElementById("cabangAchPct").innerText = pctBp + "%";
-      document.getElementById("cabangAchBar").style.width = Math.min(pctBp, 100) + "%";
+      document.getElementById("bpTarget").innerText = tBp;
+      document.getElementById("bpAch").innerText = aBp;
+      document.getElementById("bpAchPct").innerText = pctBp + "%";
+      document.getElementById("bpAchBar").style.width = Math.min(pctBp, 100) + "%";
 
+      // 2. Hitung DPD 0 (Target 98%)
       calcDPD("dpd0", filtered, 'dpd0Total', 'dpd0Paid', 0.98);
-      calcDPD("dpd130", filtered, 'dpd130Total', 'dpd130Paid', 0.55);
-      calcDPD("dpd3190", filtered, 'dpd3190Total', 'dpd3190Paid', 0.13);
 
-      renderLeaderboard(filtered);
+      // 3. Hitung DPD 1-30 (Target 55%)
+      calcDPD("dpd130", filtered, 'dpd130Total', 'dpd130Paid', 0.55);
+
+      // 4. Hitung DPD 31-90 (Target 13%)
+      calcDPD("dpd3190", filtered, 'dpd3190Total', 'dpd3190Paid', 0.13);
     }
 
     function calcDPD(prefix, data, keyTotal, keyPaid, targetPct) {
       let total = data.reduce((a,c) => a + c[keyTotal], 0);
       let paid = data.reduce((a,c) => a + c[keyPaid], 0);
       let pct = total > 0 ? ((paid / total) * 100).toFixed(1) : 0;
-      let targetWajib = Math.ceil(total * targetPct);
-      let kurang = Math.max(0, targetWajib - paid);
 
-      document.getElementById(prefix + "-total").innerText = formatNumber(total);
-      document.getElementById(prefix + "-paid").innerText = formatNumber(paid);
+      let targetWajibMitra = Math.ceil(total * targetPct);
+      let kurangMitra = Math.max(0, targetWajibMitra - paid);
+
+      document.getElementById(prefix + "-total").innerText = total;
+      document.getElementById(prefix + "-paid").innerText = paid;
       document.getElementById(prefix + "-pct").innerText = pct + "%";
       document.getElementById(prefix + "-pct2").innerText = pct + "%";
-      document.getElementById(prefix + "-kurang").innerText = formatNumber(kurang) + " Mitra Lagi";
+      document.getElementById(prefix + "-kurang").innerText = kurangMitra + " Mitra Lagi";
     }
 
-    function renderLeaderboard(list) {
-      const container = document.getElementById("leaderboardContainer");
-      container.innerHTML = "";
-
-      let sortedList = [...list].sort((a, b) => {
-        let valA = 0, valB = 0;
-        if(currentRankCategory === 'disb') {
-          valA = a.targetBp > 0 ? (a.achBp / a.targetBp) : 0;
-          valB = b.targetBp > 0 ? (b.achBp / b.targetBp) : 0;
-        } else if(currentRankCategory === 'dpd0') {
-          valA = a.dpd0Total > 0 ? (a.dpd0Paid / a.dpd0Total) : 0;
-          valB = b.dpd0Total > 0 ? (b.dpd0Paid / b.dpd0Total) : 0;
-        } else if(currentRankCategory === 'dpd130') {
-          valA = a.dpd130Total > 0 ? (a.dpd130Paid / a.dpd130Total) : 0;
-          valB = b.dpd130Total > 0 ? (b.dpd130Paid / b.dpd130Total) : 0;
-        } else if(currentRankCategory === 'dpd3190') {
-          valA = a.dpd3190Total > 0 ? (a.dpd3190Paid / a.dpd3190Total) : 0;
-          valB = b.dpd3190Total > 0 ? (b.dpd3190Paid / b.dpd3190Total) : 0;
-        }
-        return valB - valA;
-      });
-
-      if(sortedList.length === 0) {
-        container.innerHTML = <p class="text-center text-xs text-slate-400 py-3">Tidak ada data BP</p>;
-        return;
-      }
-
-      sortedList.forEach((item, index) => {
-        let score = 0;
-        let subText = "";
-
-        if(currentRankCategory === 'disb') {
-          score = item.targetBp > 0 ? ((item.achBp / item.targetBp) * 100).toFixed(1) : 0;
-          subText = Ach: ${formatNumber(item.achBp)} / Target: ${formatNumber(item.targetBp)};
-        } else if(currentRankCategory === 'dpd0') {
-          score = item.dpd0Total > 0 ? ((item.dpd0Paid / item.dpd0Total) * 100).toFixed(1) : 0;
-          subText = Paid: ${formatNumber(item.dpd0Paid)} / Total: ${formatNumber(item.dpd0Total)};
-        } else if(currentRankCategory === 'dpd130') {
-          score = item.dpd130Total > 0 ? ((item.dpd130Paid / item.dpd130Total) * 100).toFixed(1) : 0;
-          subText = Paid: ${formatNumber(item.dpd130Paid)} / Total: ${formatNumber(item.dpd130Total)};
-        } else if(currentRankCategory === 'dpd3190') {
-          score = item.dpd3190Total > 0 ? ((item.dpd3190Paid / item.dpd3190Total) * 100).toFixed(1) : 0;
-          subText = Paid: ${formatNumber(item.dpd3190Paid)} / Total: ${formatNumber(item.dpd3190Total)};
-        }
-
-        let rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 font-bold text-xs">#${index + 1}</span>;
-        if(index === 0) rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-amber-400 text-white font-bold text-xs shadow-sm"><i class="fa-solid fa-crown text-[10px]"></i></span>;
-        else if(index === 1) rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-300 text-white font-bold text-xs">#2</span>;
-        else if(index === 2) rankBadge = <span class="w-6 h-6 flex items-center justify-center rounded-full bg-amber-700/60 text-white font-bold text-xs">#3</span>;
-
-        let card = document.createElement('div');
-        card.className = "bg-white p-3 rounded-xl card-shadow border border-slate-100 flex items-center justify-between text-xs";
-        card.innerHTML = `
-          <div class="flex items-center gap-3">
-            ${rankBadge}
-            <div>
-              <span class="font-bold text-slate-800 block">${item.bp}</span>
-              <span class="text-[10px] text-slate-400">${item.point} &bull; ${subText}</span>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="font-black text-indigo-600 text-sm block">${score}%</span>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
+    // Auto-load saat aplikasi pertama kali dibuka
     window.onload = loadGSheetData;
   </script>
 </body>
