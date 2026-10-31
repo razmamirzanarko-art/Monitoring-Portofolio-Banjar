@@ -157,8 +157,8 @@
         <button onclick="switchChartTab('dpd3190')" id="tab-dpd3190" class="flex-1 py-1.5 rounded-lg hover:bg-slate-200 transition-all">DPD 31-90</button>
       </div>
 
-      <!-- Container Grafik -->
-      <div class="relative w-full" style="min-height: 650px;">
+      <!-- Container Grafik (Ukuran lebih ramping/sedang dengan tinggi pas 500px) -->
+      <div class="relative w-full" style="min-height: 500px;">
         <canvas id="rankingChart"></canvas>
       </div>
     </div>
@@ -306,7 +306,7 @@
       renderRankingChart();
     }
 
-    // Fungsi Render Grafik Chart.js dengan Warna Berdasarkan Aturan Target & Ranking
+    // Fungsi Render Grafik Chart.js (Gaya 2D Flat & Ukuran Lebih Ramping)
     function renderRankingChart() {
       let chartData = rawSheetData
         .filter(item => item.bp && item.bp.trim() !== "")
@@ -333,35 +333,31 @@
       let labels = chartData.map(d => d.bp);
       let values = chartData.map(d => d.pct);
 
-      // Logika Penentuan Warna Batang Grafik
+      // Warna Flat / Solid 2D sesuai ketentuan
       let backgroundColors = [];
       
       chartData.forEach((d, index) => {
         if(currentActiveTab === 'ach') {
-          // Achievement: 5 Teratas Hijau, 5 Terbawah Merah, Sisanya Netral (Indigo/Biru)
           if(index < 5) {
-            backgroundColors.push('#10b981'); // Hijau
+            backgroundColors.push('#10b981'); // Hijau (5 Teratas)
           } else if(index >= chartData.length - 5) {
-            backgroundColors.push('#f43f5e'); // Merah
+            backgroundColors.push('#f43f5e'); // Merah (5 Terbawah)
           } else {
-            backgroundColors.push('#6366f1'); // Indigo/Netral
+            backgroundColors.push('#6366f1'); // Netral (Indigo Solid)
           }
         } else if(currentActiveTab === 'dpd0') {
-          // DPD 0: >= 98% Hijau, < 98% Merah
           if(d.pct >= 98) {
             backgroundColors.push('#10b981'); // Hijau
           } else {
             backgroundColors.push('#f43f5e'); // Merah
           }
         } else if(currentActiveTab === 'dpd130') {
-          // DPD 1-30: >= 55% Hijau, < 55% Merah
           if(d.pct >= 55) {
             backgroundColors.push('#10b981'); // Hijau
           } else {
             backgroundColors.push('#f43f5e'); // Merah
           }
         } else if(currentActiveTab === 'dpd3190') {
-          // DPD 31-90: >= 13% Hijau, < 13% Merah
           if(d.pct >= 13) {
             backgroundColors.push('#10b981'); // Hijau
           } else {
@@ -384,9 +380,9 @@
             label: 'Capaian',
             data: values,
             backgroundColor: backgroundColors,
-            borderRadius: 6,
+            borderRadius: 3,         // Membuat ujung batang sedikit melengkung minimalis ala 2D
             borderSkipped: false,
-            maxBarThickness: 18
+            maxBarThickness: 14      // Ukuran batang dibuat lebih ramping/kecil agar proporsional
           }]
         },
         options: {
