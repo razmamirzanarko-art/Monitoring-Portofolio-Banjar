@@ -19,7 +19,6 @@
       color: #0f172a;
     }
 
-    /* DIGITAL BANKING FINTECH CARD DESIGN */
     .bank-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
@@ -35,7 +34,6 @@
       border-radius: 22px;
     }
 
-    /* ANIMASI BERKEDIP KHUSUS UNTUK SEMUA PERSENTASE */
     @keyframes digitalBlinkGlow {
       0%, 100% {
         opacity: 1;
@@ -58,7 +56,6 @@
       }
     }
 
-    /* Class Animasi Kedap-Kedip */
     .blink-pct {
       animation: digitalBlinkGlow 1.4s infinite ease-in-out !important;
       display: inline-block;
@@ -69,7 +66,6 @@
       animation: barGlowPulse 1.8s infinite ease-in-out !important;
     }
 
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: #f4f6fb; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -81,7 +77,6 @@
   <header class="bg-white/90 backdrop-blur-xl px-4 py-3.5 sticky top-0 z-30 border-b border-slate-200/70 shadow-xs">
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <!-- IKON ANALYTICS DASHBOARD DIJAMIN MUNCUL -->
         <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-blue-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
           <i class="fa-solid fa-chart-line text-base"></i>
         </div>
@@ -91,7 +86,7 @@
           </h1>
           <p class="text-[10px] text-slate-500 flex items-center gap-1.5 font-medium mt-0.5">
             <span class="w-2 h-2 rounded-full bg-emerald-500 blink-pct"></span> 
-            Area Banjar <span class="text-slate-300">•</span> By Razma Mirza
+            Area Banjar <span class="text-slate-300">•</span> <span id="sync-date">Memuat tanggal...</span>
           </p>
         </div>
       </div>
@@ -105,7 +100,7 @@
 
   <main class="p-4 space-y-4">
 
-    <!-- FILTER NAMA BP (IKON USER TIE DIJAMIN MUNCUL) -->
+    <!-- FILTER NAMA BP -->
     <div class="bank-card p-3.5 flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-indigo-600 shrink-0 shadow-2xs">
         <i class="fa-solid fa-user-tie text-sm"></i>
@@ -120,7 +115,6 @@
 
     <!-- UTAMA: CAPAIAN ACHIEVEMENT BP -->
     <div class="relative overflow-hidden bank-hero-card p-4 text-white space-y-3.5">
-      <!-- Glow Decor -->
       <div class="absolute -top-10 -right-10 w-36 h-36 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="flex justify-between items-center relative z-10">
@@ -136,7 +130,6 @@
           <span id="bpAchPct" class="text-lg font-extrabold text-emerald-400 blink-pct bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-xl">0%</span>
         </div>
         
-        <!-- Animated Glowing Progress Bar -->
         <div class="w-full bg-slate-950/80 rounded-full h-3 overflow-hidden p-0.5 border border-white/10 shadow-inner">
           <div id="bpAchBar" class="animated-progress-bar h-2 rounded-full transition-all duration-700" style="width: 0%"></div>
         </div>
@@ -261,7 +254,6 @@
   </main>
 
   <script>
-    // LINK GSHEET PUBLISHED CSV KAKAK
     const gsheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpeidqGfdaSJwPKd5RjJlGctuj3vCuBe5OYFtfGHSSBDQGb2nF-MbR5BALaSWIoS0wrV4Snmj2BafP/pub?output=csv';
 
     let rawSheetData = [];
@@ -276,6 +268,13 @@
 
     function formatNumber(num) {
       return Number(num).toLocaleString('id-ID');
+    }
+
+    // Fungsi Update Tanggal & Waktu Sinkronisasi Otomatis
+    function updateSyncDate() {
+      const now = new Date();
+      const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+      document.getElementById('sync-date').innerText = "Update: " + now.toLocaleDateString('id-ID', options);
     }
 
     function loadGSheetData() {
@@ -311,6 +310,7 @@
 
           populateBpDropdown();
           updateDashboard();
+          updateSyncDate(); // Update tanggal saat berhasil sinkron
           document.getElementById('sync-text').innerText = "Sync Live";
         },
         error: function(err) {
