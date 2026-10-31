@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Banking Dashboard - Monitoring Portofolio</title>
+  <title>Digital Analytics Dashboard - Monitoring Portofolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <!-- Chart.js CDN -->
@@ -77,12 +77,13 @@
 </head>
 <body class="pb-20 max-w-md mx-auto bg-[#f4f6fb] border-x border-slate-200/80 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- HEADER DIGITAL BANK STYLE (BUMN MODERN) -->
+  <!-- HEADER DIGITAL ANALYTICS DASHBOARD -->
   <header class="bg-white/90 backdrop-blur-xl px-4 py-3.5 sticky top-0 z-30 border-b border-slate-200/70 shadow-xs">
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-          <i class="fa-solid fa-wallet text-base"></i>
+        <!-- IKON ANALYTICS DASHBOARD MODEREN -->
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-blue-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+          <i class="fa-solid fa-chart-line text-base"></i>
         </div>
         <div>
           <h1 class="font-extrabold text-xs tracking-tight text-slate-900 uppercase">
@@ -107,7 +108,7 @@
     <!-- FILTER NAMA BP (Digital Card Dropdown) -->
     <div class="bank-card p-3.5 flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-indigo-600 shrink-0 shadow-2xs">
-        <i class="fa-solid fa-user-gear text-sm"></i>
+        <i class="fa-solid fa-chart-user text-sm"></i>
       </div>
       <div class="flex-1">
         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Pilih BP / Point</label>
@@ -117,14 +118,14 @@
       </div>
     </div>
 
-    <!-- UTAMA: CAPAIAN ACHIEVEMENT BP (NORMAL SIZE & DIGITAL BANKING LOOK) -->
+    <!-- UTAMA: CAPAIAN ACHIEVEMENT BP -->
     <div class="relative overflow-hidden bank-hero-card p-4 text-white space-y-3.5">
       <!-- Glow Decor -->
       <div class="absolute -top-10 -right-10 w-36 h-36 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="flex justify-between items-center relative z-10">
         <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-200 flex items-center gap-1.5">
-          <i class="fa-solid fa-award text-indigo-400"></i> Achievement BP Total
+          <i class="fa-solid fa-chart-simple text-indigo-400"></i> Achievement BP Total
         </span>
         <span id="labelBP" class="text-[10px] bg-white/10 text-white border border-white/15 font-bold px-3 py-1 rounded-full backdrop-blur-md">Semua BP</span>
       </div>
@@ -132,8 +133,6 @@
       <div class="relative z-10 space-y-2">
         <div class="flex justify-between items-center">
           <span class="text-xs text-slate-300 font-semibold tracking-wide">Persentase Achievement</span>
-          
-          <!-- PERSENTASE UKURAN NORMAL + BERKEDIP -->
           <span id="bpAchPct" class="text-lg font-extrabold text-emerald-400 blink-pct bg-emerald-950/60 border border-emerald-500/30 px-3 py-1 rounded-xl">0%</span>
         </div>
         
@@ -155,7 +154,7 @@
       </div>
     </div>
 
-    <!-- BUCKET DPD BREAKDOWN (BERKEDIP DPD 0, 1-30, 31-90) -->
+    <!-- BUCKET DPD BREAKDOWN -->
     <div class="space-y-3">
       <div class="flex items-center justify-between">
         <h2 class="font-extrabold text-slate-400 text-[10px] uppercase tracking-widest flex items-center gap-1.5">
@@ -170,7 +169,6 @@
             <span class="font-bold text-slate-900 text-xs tracking-wide block">DPD 0 (Lancar)</span>
             <span class="text-[10px] text-slate-400 font-medium">Target Standard: <b class="text-slate-700">98%</b></span>
           </div>
-          <!-- PERSENTASE BERKEDIP DPD 0 -->
           <span id="dpd0-pct" class="bg-emerald-100 text-emerald-700 text-xs font-black px-2.5 py-1 rounded-xl border border-emerald-200/80 blink-pct">0%</span>
         </div>
 
@@ -195,7 +193,6 @@
             <span class="font-bold text-slate-900 text-xs tracking-wide block">DPD 1 - 30</span>
             <span class="text-[10px] text-slate-400 font-medium">Target Standard: <b class="text-slate-700">55%</b></span>
           </div>
-          <!-- PERSENTASE BERKEDIP DPD 1-30 -->
           <span id="dpd130-pct" class="bg-amber-100 text-amber-700 text-xs font-black px-2.5 py-1 rounded-xl border border-amber-200/80 blink-pct">0%</span>
         </div>
 
@@ -220,7 +217,6 @@
             <span class="font-bold text-slate-900 text-xs tracking-wide block">DPD 31 - 90</span>
             <span class="text-[10px] text-slate-400 font-medium">Target Standard: <b class="text-slate-700">13%</b></span>
           </div>
-          <!-- PERSENTASE BERKEDIP DPD 31-90 -->
           <span id="dpd3190-pct" class="bg-rose-100 text-rose-700 text-xs font-black px-2.5 py-1 rounded-xl border border-rose-200/80 blink-pct">0%</span>
         </div>
 
