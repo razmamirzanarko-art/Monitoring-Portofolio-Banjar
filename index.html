@@ -157,7 +157,7 @@
         <button onclick="switchChartTab('dpd3190')" id="tab-dpd3190" class="flex-1 py-1.5 rounded-lg hover:bg-slate-200 transition-all">DPD 31-90</button>
       </div>
 
-      <!-- Container Grafik (Tinggi diperbesar agar muat 19 BP tanpa terpotong) -->
+      <!-- Container Grafik -->
       <div class="relative w-full" style="min-height: 650px;">
         <canvas id="rankingChart"></canvas>
       </div>
@@ -306,9 +306,8 @@
       renderRankingChart();
     }
 
-    // Fungsi Render Grafik Chart.js
+    // Fungsi Render Grafik Chart.js dengan Warna Berdasarkan Aturan Target & Ranking
     function renderRankingChart() {
-      // Filter untuk membuang baris kosong agar tidak ada grafik melayang tanpa nama
       let chartData = rawSheetData
         .filter(item => item.bp && item.bp.trim() !== "")
         .map(item => {
@@ -334,23 +333,44 @@
       let labels = chartData.map(d => d.bp);
       let values = chartData.map(d => d.pct);
 
-      const ctx = document.getElementById('rankingChart').getContext('2d');
+      // Logika Penentuan Warna Batang Grafik
+      let backgroundColors = [];
+      
+      chartData.forEach((d, index) => {
+        if(currentActiveTab === 'ach') {
+          // Achievement: 5 Teratas Hijau, 5 Terbawah Merah, Sisanya Netral (Indigo/Biru)
+          if(index < 5) {
+            backgroundColors.push('#10b981'); // Hijau
+          } else if(index >= chartData.length - 5) {
+            backgroundColors.push('#f43f5e'); // Merah
+          } else {
+            backgroundColors.push('#6366f1'); // Indigo/Netral
+          }
+        } else if(currentActiveTab === 'dpd0') {
+          // DPD 0: >= 98% Hijau, < 98% Merah
+          if(d.pct >= 98) {
+            backgroundColors.push('#10b981'); // Hijau
+          } else {
+            backgroundColors.push('#f43f5e'); // Merah
+          }
+        } else if(currentActiveTab === 'dpd130') {
+          // DPD 1-30: >= 55% Hijau, < 55% Merah
+          if(d.pct >= 55) {
+            backgroundColors.push('#10b981'); // Hijau
+          } else {
+            backgroundColors.push('#f43f5e'); // Merah
+          }
+        } else if(currentActiveTab === 'dpd3190') {
+          // DPD 31-90: >= 13% Hijau, < 13% Merah
+          if(d.pct >= 13) {
+            backgroundColors.push('#10b981'); // Hijau
+          } else {
+            backgroundColors.push('#f43f5e'); // Merah
+          }
+        }
+      });
 
-      // Efek Gradasi Warna Modern
-      let gradient = ctx.createLinearGradient(0, 0, 300, 0);
-      if(currentActiveTab === 'ach') {
-        gradient.addColorStop(0, '#4f46e5');
-        gradient.addColorStop(1, '#818cf8');
-      } else if(currentActiveTab === 'dpd0') {
-        gradient.addColorStop(0, '#059669');
-        gradient.addColorStop(1, '#34d399');
-      } else if(currentActiveTab === 'dpd130') {
-        gradient.addColorStop(0, '#d97706');
-        gradient.addColorStop(1, '#fbbf24');
-      } else if(currentActiveTab === 'dpd3190') {
-        gradient.addColorStop(0, '#e11d48');
-        gradient.addColorStop(1, '#fb7185');
-      }
+      const ctx = document.getElementById('rankingChart').getContext('2d');
 
       if(rankingChart) {
         rankingChart.destroy();
@@ -363,10 +383,10 @@
           datasets: [{
             label: 'Capaian',
             data: values,
-            backgroundColor: gradient,
+            backgroundColor: backgroundColors,
             borderRadius: 6,
             borderSkipped: false,
-            maxBarThickness: 18 // Disesuaikan agar pas untuk 19 data
+            maxBarThickness: 18
           }]
         },
         options: {
@@ -398,7 +418,7 @@
               ticks: {
                 font: { size: 9, weight: 'bold' },
                 color: '#334155',
-                autoSkip: false // Memastikan ke-19 nama tampil semua dengan rapi
+                autoSkip: false
               }
             }
           }
